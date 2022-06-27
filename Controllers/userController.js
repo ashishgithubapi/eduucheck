@@ -8,6 +8,7 @@ var http = require("http");
 
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
+const {Person} = require('../Model/personRegisterModel')
 const API_KEY = "/API/V1/fda7bc0b-20f9-11e7-929b-00163ef91450";
 const MODE_SMS = "SMS";
 const TEMPLATE_NAME= "educheck_otp";
@@ -15,9 +16,11 @@ module.exports.SignUp = async(req,res)=>{
   
 
    var addParms;
-    const user = await User.findOne({
-        number: req.body.number
-    });
+
+   const user = await User.findOne({
+    number: req.body.number
+});
+   
 
     if(user)return res.status(400).send('user already registered');
     //var OTP = "123456";
@@ -69,12 +72,13 @@ module.exports.SignUp = async(req,res)=>{
 
    
 }
-
+//
 module.exports.verifyOtp = async(req,res)=>{
       const otpHolder = await Otp.find({
         number: req.body.number
       });
 
+     
     //   console.log(otpHolder+"yeh otp holder hai");
       if(otpHolder.length==0) return res.status(400).send('please enter the proper otp')
       const rightOtpFind = otpHolder[otpHolder.length-1];
@@ -84,14 +88,40 @@ module.exports.verifyOtp = async(req,res)=>{
     //   console.log(validUser+"valid aaya");
 
       if(rightOtpFind.number===req.body.number && validUser){
+        
         const user = new User(_.pick(req.body,['number']));
         const token = user.generateJWT();
-        const result = await user.save();
-        const OTPDelete = await Otp.deleteMany({
-            number: rightOtpFind.number
-        });
+        // const result = await user.save();
+        // const OTPDelete = await Otp.deleteMany({
+        //     number: rightOtpFind.number
+        // });
+       
+        if (typeof localStorage === "undefined" || localStorage === null) {
+          var LocalStorage = require('node-localstorage').LocalStorage;
+          localStorage = new LocalStorage('./scratch');
+       }
+
+       
+       var getUserObject = JSON.parse(localStorage.getItem(''+rightOtpFind.number+''));
+       console.log("data",JSON.stringify(getUserObject))
+       if(getUserObject==null){
+        var userObject = { 'name': '', 'email': '', 'address':'', 'pincode':'','otp':rightOtpFind.otp  };
+        localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
+       }
+       else{
+        var userObject =getUserObject;
+        userObject['otp']=rightOtpFind.otp;
+        localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
+       }
+       
+        //localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
+        
+
+
         return res.status(200).send({
             message:"verify otp successful",
+            data: getUserObject
+
             // token: token,
             // data: result
         });
@@ -99,5 +129,28 @@ module.exports.verifyOtp = async(req,res)=>{
       } else{
           return res.status(400).send("otp was wrong")
       }
+
+
 }
+
+
+    // Deconstructs the array field from the
+    // input document to output a document
+    // for each element
+
+    // module.exports.User_data = function(req,res){
+    //   console.log('ashihs');
+    //   const person = new Person({
+    //     number:"8888888"
+    // })
+    
+    // // console.log(person);
+
+    // return person
+    // }
+
+    
+
+    
+  
 

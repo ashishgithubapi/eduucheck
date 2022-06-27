@@ -10,5 +10,5 @@ module.exports.Otp = model('Otp',Schema({
         required:true
     },
 
-    createdAt:{type:Date, default: Date.now, index:{expires:600}}
+    createdAt:{type:Date, default: Date.now}
 },{timestamps:true}))

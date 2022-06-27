@@ -20,7 +20,9 @@ const personSchema = Schema({
 
       address:String,
       pincode:Number,
-      referalcode:String
+      referalcode:String,
+      user_id:String,
+      otp:String
 });
 
 module.exports.Person = model('Person',personSchema)
