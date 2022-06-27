@@ -25,7 +25,5 @@
     "slugify": "^1.6.5",
     "util": "^0.12.4"
   },
-  "devDependencies": {
-    "node-localstorage": "^2.2.1"
-  }
+  "devDependencies": {}
 }
