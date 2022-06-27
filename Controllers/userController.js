@@ -127,7 +127,9 @@ module.exports.verifyOtp = async(req,res)=>{
         });
 
       } else{
-          return res.status(400).send("otp was wrong")
+          return res.status(400).send({
+            message:"otp was wrong"
+          })
       }
 
 
