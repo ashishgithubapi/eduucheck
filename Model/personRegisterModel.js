@@ -25,7 +25,8 @@ const personSchema = Schema({
       otp:String,
       gst_filename: String,
     
-      doc_filename:String
+      doc_filename:String,
+      dirname:String
 
 });
 
