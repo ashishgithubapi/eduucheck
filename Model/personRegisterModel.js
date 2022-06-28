@@ -26,9 +26,9 @@ const personSchema = Schema({
       gst_filename: String,
     
       doc_filename:String,
-      dirname:String,
+    
       emergency_contact:String,
-      _id:String
+      
 
 });
 
