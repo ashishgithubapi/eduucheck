@@ -26,7 +26,7 @@ module.exports.Userreg = function(req,res){
         var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ... 
       
         const buffer = Buffer.from(data, "base64"); 
-        Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write(req.body.gst_filename); });
+        Jimp.read(buffer, (err, res) => { res('this is err'+err);if (err) throw new Error(err); res.quality(100).write(req.body.gst_filename); });
   
         
     }
