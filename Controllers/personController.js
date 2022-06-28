@@ -38,6 +38,7 @@ module.exports.Userreg = function(req,res){
   
        
     }
+    console.log(__dirname);
 
     const user = new Person({
         application_type: req.body.application_type,
