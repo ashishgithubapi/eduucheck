@@ -1,4 +1,5 @@
 const {Person} = require('../Model/personRegisterModel')
+const Jimp = require("jimp"); const fs = require("fs");
 
 module.exports.Userreg = function(req,res){
     console.log('ashish');
@@ -21,6 +22,22 @@ module.exports.Userreg = function(req,res){
 
 
 
+    if(req.body.gst_base64data.length>0){
+        var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ... 
+      
+        const buffer = Buffer.from(data, "base64"); 
+        Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write(req.body.gst_filename); });
+  
+        
+    }
+    if(req.body.doc_base64data.length>0){
+        var data = req.body.doc_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ... 
+      
+        const buffer = Buffer.from(data, "base64"); 
+        Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write(req.body.doc_filename); });
+  
+       
+    }
 
     const user = new Person({
         application_type: req.body.application_type,
@@ -30,11 +47,15 @@ module.exports.Userreg = function(req,res){
         address:req.body.address,
         pincode:req.body.pincode,
         referalcode:req.body.referalcode,
+        gst_filename:req.body.gst_filename,
+        doc_filename:req.body.doc_filename
         
         
     })
     //  user.save();
-    user.save((err, u) => { console.log('this is user is'+u._id); 
+    user.save((err, u) => { 
+        console.log("what is u??"+u); 
+        console.log(err);
     
         const userObject =   {
             application_type: req.body.application_type,

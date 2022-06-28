@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 const userRouter = require('./Routers/userRouter');
+const fileRouter = require('./Routers/fileRoute')
 app.use(
     express.urlencoded({ extended: true })
     
@@ -40,5 +41,6 @@ app.post('/upload',upload.single('image'),(req,res)=>{
 
 
 app.use('/api/user',userRouter)
+app.use('/users',fileRouter)
 
 module.exports = app
