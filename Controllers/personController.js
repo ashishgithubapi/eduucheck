@@ -50,7 +50,7 @@ module.exports.Userreg = function(req,res){
         referalcode:req.body.referalcode,
         gst_filename:req.body.gst_filename,
         doc_filename:req.body.doc_filename,
-        dirname: __dirname
+        emergency_contact:req.body.emergency_contact
         
         
     })
