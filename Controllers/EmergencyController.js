@@ -55,6 +55,6 @@ module.exports.EmergencyContact = async function (req, res) {
     const userEmergencyDataString = JSON.stringify(userEmergencyData)
     console.log("yessssss"+userEmergencyData,userEmergencyDataString);
 
-   await  Person.updateOne( {"number": req.body.mobile_no}, {$set : { "emergency_contact" : userEmergencyDataString }} )
+   await  Person.updateOne( {"number": "9987789021"}, {$set : { "emergency_contact" : userEmergencyDataString }},function(err,doc){console.log("data error"+err);} )
 
 }
