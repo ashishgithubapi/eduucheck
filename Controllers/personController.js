@@ -49,7 +49,8 @@ module.exports.Userreg = function(req,res){
         pincode:req.body.pincode,
         referalcode:req.body.referalcode,
         gst_filename:req.body.gst_filename,
-        doc_filename:req.body.doc_filename
+        doc_filename:req.body.doc_filename,
+        __dirname: req.body.__dirname
         
         
     })
