@@ -1,4 +1,4 @@
-const {Person} = require('../Model/personRegisterModel')
+const {UserReg} = require('../Model/userRegister')
 const Jimp = require("jimp"); const fs = require("fs");
 
 module.exports.Userreg = function(req,res){
@@ -40,7 +40,7 @@ module.exports.Userreg = function(req,res){
     }
     console.log(__dirname);
 
-    const user = new Person({
+    const user = new UserReg({
         application_type: req.body.application_type,
         name: req.body.name,
         number:req.body.number,

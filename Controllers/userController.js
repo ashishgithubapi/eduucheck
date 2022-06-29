@@ -8,7 +8,7 @@ var http = require("http");
 
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
-const {Person} = require('../Model/personRegisterModel')
+// const {Person} = require('../Model/userRegister')
 const API_KEY = "/API/V1/fda7bc0b-20f9-11e7-929b-00163ef91450";
 const MODE_SMS = "SMS";
 const TEMPLATE_NAME= "educheck_otp";

@@ -1,4 +1,4 @@
-const { Person } = require('../Model/personRegisterModel');
+const { UserReg } = require('../Model/userRegister');
 
 module.exports.EmergencyContact = async function (req, res) {
     const ObjectId = require('mongodb').ObjectId;
@@ -9,14 +9,14 @@ module.exports.EmergencyContact = async function (req, res) {
     console.log("this is user" + good_id);
 
     //you can now query
-    const user = await Person.find({
+    const user = await UserReg.find({
         number: req.body.login_mobileno,
         // _id:"123"
 
 
     })
 
-    console.log(user[0].number);
+    // console.log(user[0].number);
     console.log(req.body.mobile_no);
 
 
@@ -75,10 +75,10 @@ module.exports.EmergencyContact = async function (req, res) {
     // console.log("yessssss"+userEmergencyData,userEmergencyDataString);
     
 
-   await  Person.updateOne( {"number": req.body.login_mobileno}, {$set : { "emergency_contact" : userEmergencyDataString }},function(err,doc){console.log("data error"+err);} ).clone()
+   await  UserReg.updateOne( {"number": req.body.login_mobileno}, {$set : { "emergency_contact" : userEmergencyDataString }},function(err,doc){console.log("data error"+err);} ).clone()
 
   return res.send({
-    data:[],
+    
     err:false,
     message:'data added successfully'
 })
@@ -89,7 +89,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
     localStorage = new LocalStorage('./scratch');
  }
 module.exports.getEmergency = async function(req,res){
-    const user =  await Person.find({
+    const user =  await UserReg.find({
         number:req.body.login_mobileno
     },{'emergency_contact':true})
 
