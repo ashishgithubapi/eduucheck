@@ -28,7 +28,11 @@ module.exports.SignUp = async(req,res)=>{
         digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
     });//otp number random genrate
 
-    const mobile_number = req.body.number
+    const mobile_number = req.body.number;
+    // const otp_set = generate_otp(mobile_number);
+    // return res.status(200).json({
+    //     message:"otp send successfully"
+    // });
     
     const otp_obj = new Otp({number:mobile_number, otp:otp_number_genrate});//passing a parameter in object model to validate
     const salt  = await bcrypt.genSalt(10);//salt encyption

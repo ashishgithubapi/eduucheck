@@ -8,5 +8,7 @@ module.exports.fileUpload = function (req, res) {
       const buffer = Buffer.from(data, "base64"); 
       Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write(req.body.file_name); });
 
-      res.send('this is the file upload')
+      return res.status(200).json({
+        message: 'file upload successful'
+      })
 }
