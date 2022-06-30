@@ -5,7 +5,7 @@ const userSchema = Schema({
     number:{
         type: String,
         required: true
-    }
+    },
 }, {timestamps: true});
 
 userSchema.methods.generateJWT = function(){

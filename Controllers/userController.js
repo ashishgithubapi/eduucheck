@@ -8,32 +8,21 @@ var http = require("http");
 
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
-// const {Person} = require('../Model/userRegister')
+const {UserReg} = require('../Model/userRegister')
 const API_KEY = "/API/V1/fda7bc0b-20f9-11e7-929b-00163ef91450";
 const MODE_SMS = "SMS";
 const TEMPLATE_NAME= "educheck_otp";
 module.exports.SignUp = async(req,res)=>{
-  
-
    var addParms;
-
    const user = await User.findOne({
     number: req.body.number
-});
-   
-
+    });
     if(user)return res.status(400).send('user already registered');
-    //var OTP = "123456";
     const otp_number_genrate = otpGenerator.generate(6,{
         digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
     });//otp number random genrate
-    console.log(otp_number_genrate);
+    console.log("otp number generate"+otp_number_genrate);
     const mobile_number = req.body.number;
-    // const otp_set = generate_otp(mobile_number);
-    // return res.status(200).json({
-    //     message:"otp send successfully"
-    // });
-    
     const otp_obj = new Otp({number:mobile_number, otp:otp_number_genrate});//passing a parameter in object model to validate
     const salt  = await bcrypt.genSalt(10);//salt encyption
     var otp_hash = await bcrypt.hash(otp_number_genrate,salt);//Otp salt hash encyption 
@@ -49,25 +38,20 @@ module.exports.SignUp = async(req,res)=>{
           "content-type": "application/x-www-form-urlencoded"
         }
       };
-      
       var req = http.request(options, function (res) {
-        var chunks = [];
-      
-        res.on("data", function (chunk) {
+      var chunks = [];
+      res.on("data", function (chunk) {
           chunks.push(chunk);
-        });
+      });
       
-        res.on("end", function () {
+      res.on("end", function () {
           var body = Buffer.concat(chunks);
-          console.log(body.toString());
-          console.log(body.toString());
-
         });
       });
       
       req.write(qs.stringify({}));
       req.end();
-    console.log(res);
+    
     return res.status(200).json({
         message:"otp send successfully"
     });
@@ -82,6 +66,12 @@ module.exports.verifyOtp = async(req,res)=>{
         number: req.body.number
       });
 
+      const getUserObject = await UserReg.find({
+        number: req.body.number
+      });
+
+      console.log("userRegister",getUserObject);
+
      
     //   console.log(otpHolder+"yeh otp holder hai");
       if(otpHolder.length==0) return res.status(400).send('please enter the proper otp')
@@ -95,27 +85,18 @@ module.exports.verifyOtp = async(req,res)=>{
         
         const user = new User(_.pick(req.body,['number']));
         const token = user.generateJWT();
-        // const result = await user.save();
-        // const OTPDelete = await Otp.deleteMany({
-        //     number: rightOtpFind.number
-        // });
        
-        if (typeof localStorage === "undefined" || localStorage === null) {
-          var LocalStorage = require('node-localstorage').LocalStorage;
-          localStorage = new LocalStorage('./scratch');
-       }
 
+       let is_register=0;
+       let userObject={};
        
-       var getUserObject = JSON.parse(localStorage.getItem(''+rightOtpFind.number+''));
-       console.log("data",JSON.stringify(getUserObject))
-       if(getUserObject==null){
-        var userObject = { 'name': '', 'email': '', 'address':'', 'pincode':'','otp':rightOtpFind.otp  };
-        localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
+       if(getUserObject.length==0){
+        userObject = { 'name': '', 'email': '', 'address':'', 'pincode':'','otp':rightOtpFind.otp  };
        }
        else{
-        var userObject =getUserObject;
+        is_register=1;
+        userObject =getUserObject;
         userObject['otp']=rightOtpFind.otp;
-        localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
        }
        
         //localStorage.setItem(''+rightOtpFind.number+'', JSON.stringify(userObject));
@@ -124,7 +105,8 @@ module.exports.verifyOtp = async(req,res)=>{
 
         return res.status(200).send({
             message:"verify otp successful",
-            data: getUserObject
+            data: getUserObject,
+            is_register:is_register
 
             // token: token,
             // data: result

@@ -1,111 +1,111 @@
 const { UserReg } = require('../Model/userRegister');
+const ObjectId = require('mongodb').ObjectId;
 
+const validationUser = async (req)=>{
+    var id = req.login_user_id;
+    //you can now query
+    const user = await UserReg.findOne({
+        _id: ObjectId(req.login_user_id),
+    });
+    
+    if (user.length==0) {
+        return res.status(401).json({
+            data: [],
+            err: true,
+            message: 'Login User Not exist'
+        })
+    }
+    else if (user.number == req.emergency_mobile_no) {
+        return res.status(401).json({
+            data: [],
+            err: true,
+            message: 'please enter diff no'
+        })
+    }
+    
+    return user;
+}
 
+module.exports.addEmergencyContactValidation = async function (req, res) {
+   
+    //you can now query
+    const user = await validationUser(req.body);
+    if(Object.keys(user).length>0){
+        return res.status(200).json({
+            data: [],
+            err: false,
+            message: 'Kindly Validate Mobile Number'
+        })
+    }
+}
 
-// const _ = require('lodash');
-// const axios = require('axios');
-// const otp_Generator = require('otp-generator');
-// var qs = require("querystring");
-// var http = require("http");
-
-// const{ SignUp} = require('../Controllers/userController');
 
 module.exports.EmergencyContact = async function (req, res) {
-    const ObjectId = require('mongodb').ObjectId;
 
     //transform your param into an ObjectId
-    var id = req.params.user_id;
-    var good_id = new ObjectId(id);
-    console.log("this is user" + good_id);
-
-    //you can now query
-    const user = await UserReg.find({
-        number: req.body.login_mobileno,
-        // _id:"123"
-
-
-    })
-
-
-    if (!user) {
-        console.log('user not exist');
-    }
-
-
-    else if (user[0].number == req.body.mobile_no) {
-        console.log('please enter diff no');
-    }
-
-    let userEmergencyData = []
-    if (user[0].emergency_contact) {
-
-
-        if (user[0].emergency_contact.trim().length > 0) {
-            const userEmergencyList = JSON.parse(user[0].emergency_contact.trim())
-            userEmergencyData = userEmergencyList
-            const phoneNo = userEmergencyData[0].mobile_no
-            console.log(phoneNo);
-
-
-
-
-
-            const count = userEmergencyList.length
-
-            if (count > 2) {
-
-                // console.log('you are allowed only 3 emergency contact')
-                return res.status(200).json({
-                    data: [],
-                    err: true,
-                    message: 'you are allowed only 3 emergency contact'
-                })
-            }
-            else {
-                var currentRelationCount = userEmergencyData.reduce(function (n, user) { return n + (user.relation == req.body.relation); }, 0); console.log(currentRelationCount);
-
-
+    const user = await validationUser(req.body);
+    
+    if(Object.keys(user).length>0){
+        let userEmergencyData = []
+       
+        if (user.emergency_contact!='') {
+            
+            if (user.emergency_contact.trim().length > 0) {
+                const userEmergencyList = JSON.parse(user.emergency_contact.trim())
+                userEmergencyData = userEmergencyList
+                const phoneNo = userEmergencyData[0].mobile_no
+                const count = userEmergencyList.length
+                if (count > 2) {
+                    return res.status(401).json({
+                        data: [],
+                        err: true,
+                        message: 'you are allowed only 3 emergency contact'
+                    })
+                }
+                
+                var currentRelationCount = userEmergencyData.reduce(function (n, user) { return n + (user.relation == req.body.emergency_relation); }, 0); 
+                console.log("currentRelationCount",currentRelationCount);
                 if (currentRelationCount >= 2) {
-
                     // console.log('you are allowed only 3 emergency contact')
-                    return res.status(200).json({
+                    return res.status(401).json({
                         data: [],
                         err: true,
                         message: 'select other relation'
                     })
                 }
+
+                var currentEmergencyMobileCount = userEmergencyData.reduce(function (n, user) { return n + (user.mobile_no == req.body.emergency_mobile_no); }, 0); 
+                console.log("currentEmergencyMobileCount",currentEmergencyMobileCount);
+                if (currentEmergencyMobileCount >= 1) {
+                    // console.log('you are allowed only 3 emergency contact')
+                    return res.status(401).json({
+                        data: [],
+                        err: true,
+                        message: 'This Emergency number is already Used'
+                    })
+                }
+                
             }
-
-
         }
 
+        
+        
+        let emergencyObject = { name: req.body.emergency_name, relation: req.body.emergency_relation, mobile_no: req.body.emergency_mobile_no }
+
+        console.log("emergencyObject",emergencyObject);
+        // userEmergencyData.push(emergencyObject)
+        userEmergencyData = [...userEmergencyData, emergencyObject]
+        const userEmergencyDataString = JSON.stringify(userEmergencyData)
+        await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
+        
+        return res.status(200).json({
+            data:[],
+            err: false,
+            message: 'data added successfully'
+        })
     }
-
-    let emergencyObject = { name: req.body.name, relation: req.body.relation, mobile_no: req.body.mobile_no }
-
-    // userEmergencyData.push(emergencyObject)
-    userEmergencyData = [...userEmergencyData, emergencyObject]
-
-    const userEmergencyDataString = JSON.stringify(userEmergencyData)
-    // console.log("yessssss"+userEmergencyData,userEmergencyDataString);
-
-
-    await UserReg.updateOne({ "number": req.body.login_mobileno }, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
-
-
-    return res.status(200).json({
-
-        err: false,
-        message: 'data added successfully'
-    })
-
-
-
 }
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-}
+
 module.exports.getEmergency = async function (req, res) {
     const user = await UserReg.find({
         number: req.body.login_mobileno
