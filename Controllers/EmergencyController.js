@@ -1,26 +1,29 @@
 const { UserReg } = require('../Model/userRegister');
 const ObjectId = require('mongodb').ObjectId;
 
-const validationUser = async (req)=>{
+const validationUser = async (req,type)=>{
     var id = req.login_user_id;
     //you can now query
     const user = await UserReg.findOne({
         _id: ObjectId(req.login_user_id),
     });
     
-    if (user.length==0) {
+    if (typeof user ===undefined) {
         return res.status(401).json({
             data: [],
             err: true,
             message: 'Login User Not exist'
         })
     }
-    else if (user.number == req.emergency_mobile_no) {
-        return res.status(401).json({
-            data: [],
-            err: true,
-            message: 'please enter diff no'
-        })
+    if(type=="all")
+    {
+        if (user.number == req.emergency_mobile_no) {
+            return res.status(401).json({
+                data: [],
+                err: true,
+                message: 'please enter diff no'
+            })
+        }
     }
     
     return user;
@@ -29,7 +32,7 @@ const validationUser = async (req)=>{
 module.exports.addEmergencyContactValidation = async function (req, res) {
    
     //you can now query
-    const user = await validationUser(req.body);
+    const user = await validationUser(req.body,'all');
     if(Object.keys(user).length>0){
         return res.status(200).json({
             data: [],
@@ -43,7 +46,7 @@ module.exports.addEmergencyContactValidation = async function (req, res) {
 module.exports.EmergencyContact = async function (req, res) {
 
     //transform your param into an ObjectId
-    const user = await validationUser(req.body);
+    const user = await validationUser(req.body,"all");
     
     if(Object.keys(user).length>0){
         let userEmergencyData = []
@@ -107,15 +110,21 @@ module.exports.EmergencyContact = async function (req, res) {
 }
 
 module.exports.getEmergency = async function (req, res) {
-    const user = await UserReg.find({
-        number: req.body.login_mobileno
-    }, { 'emergency_contact': true })
 
+    const user = await validationUser(req.body,"single");
+    let emergencyData=[]
+    
+    if(user != null){
+        if(user.emergency_contact.trim()!='')
+        {
+            emergencyData= JSON.parse(user.emergency_contact)
+        }
+    }
     // console.log(user);
     return res.status(200).json({
 
         message: "data retrieve success",
-        data: JSON.parse(user[0].emergency_contact),
+        data: emergencyData,
         err: false
     })
 }

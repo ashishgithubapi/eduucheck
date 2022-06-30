@@ -20,7 +20,7 @@ router.route('/addemergencycontact')
 .post(EmergencyContact)
 
 router.route('/getemergencycontact')
-.get(getEmergency)
+.post(getEmergency)
 
 router.route('/deleteemergencycontact')
 .delete(deleteEmergencyContact)
