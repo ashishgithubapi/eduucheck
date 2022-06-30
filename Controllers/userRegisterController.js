@@ -81,7 +81,9 @@ module.exports.Userreg = function(req,res){
 
     
 
-   res.send(user)
+    return res.status(200).json({
+        data: user
+    })
      
     console.log(user);
 }

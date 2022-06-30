@@ -13,11 +13,14 @@ router.route('/verifyotp')
 router.route('/userreg')
 .post(Userreg)
 
-router.route('/addemergencyContact')
+router.route('/addemergencycontact')
 .post(EmergencyContact)
 
-router.route('/getemergencyContact')
+router.route('/getemergencycontact')
 .get(getEmergency)
+
+// router.route('/test')
+// .post(TestFunction)
 
 // router.route('/userdata')
 // .post(User_data)
