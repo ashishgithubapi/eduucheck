@@ -1,6 +1,7 @@
 const { UserReg } = require('../Model/userRegister');
 
 
+
 // const _ = require('lodash');
 // const axios = require('axios');
 // const otp_Generator = require('otp-generator');
@@ -45,8 +46,8 @@ module.exports.EmergencyContact = async function (req, res) {
             const phoneNo = userEmergencyData[0].mobile_no
             console.log(phoneNo);
 
-           
-           
+
+
 
 
             const count = userEmergencyList.length
@@ -88,7 +89,7 @@ module.exports.EmergencyContact = async function (req, res) {
     const userEmergencyDataString = JSON.stringify(userEmergencyData)
     // console.log("yessssss"+userEmergencyData,userEmergencyDataString);
 
-     
+
     await UserReg.updateOne({ "number": req.body.login_mobileno }, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
 
 
@@ -187,3 +188,27 @@ module.exports.getEmergency = async function (req, res) {
 
 
 // }
+
+
+module.exports.deleteEmergencyContact = async function (req, res) {
+   const user = await UserReg.find({
+        number: req.body.login_mobileno
+   })
+   var data = JSON.parse(user[0].emergency_contact)
+    // console.log(data);
+  
+   
+    
+
+    data.forEach(function(item){ delete item.mobile_no,delete item.name,delete item.relation});
+
+    //  console.log(JSON.stringify(data));
+
+    var ref = JSON.stringify(data)
+
+     await UserReg.updateOne({ "number": req.body.login_mobileno }, { $set: { "emergency_contact": ref } })
+
+     
+
+
+}

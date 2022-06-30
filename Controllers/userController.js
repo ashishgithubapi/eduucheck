@@ -27,7 +27,7 @@ module.exports.SignUp = async(req,res)=>{
     const otp_number_genrate = otpGenerator.generate(6,{
         digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
     });//otp number random genrate
-
+    console.log(otp_number_genrate);
     const mobile_number = req.body.number;
     // const otp_set = generate_otp(mobile_number);
     // return res.status(200).json({
