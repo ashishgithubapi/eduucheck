@@ -1,103 +1,214 @@
 const { UserReg } = require('../Model/userRegister');
+const ObjectId = require('mongodb').ObjectId;
+
+const validationUser = async (req)=>{
+    var id = req.login_user_id;
+    //you can now query
+    const user = await UserReg.findOne({
+        _id: ObjectId(req.login_user_id),
+    });
+    
+    if (user.length==0) {
+        return res.status(401).json({
+            data: [],
+            err: true,
+            message: 'Login User Not exist'
+        })
+    }
+    else if (user.number == req.emergency_mobile_no) {
+        return res.status(401).json({
+            data: [],
+            err: true,
+            message: 'please enter diff no'
+        })
+    }
+    
+    return user;
+}
+
+module.exports.addEmergencyContactValidation = async function (req, res) {
+   
+    //you can now query
+    const user = await validationUser(req.body);
+    if(Object.keys(user).length>0){
+        return res.status(200).json({
+            data: [],
+            err: false,
+            message: 'Kindly Validate Mobile Number'
+        })
+    }
+}
+
 
 module.exports.EmergencyContact = async function (req, res) {
-    const ObjectId = require('mongodb').ObjectId;
 
     //transform your param into an ObjectId
-    var id = req.params.user_id;
-    var good_id = new ObjectId(id);
-    console.log("this is user" + good_id);
-
-    //you can now query
-    const user = await UserReg.find({
-        number: req.body.login_mobileno,
-        // _id:"123"
-
-
-    })
-
-    // console.log(user[0].number);
-    console.log(req.body.mobile_no);
-
-
-    if (!user) {
-        console.log('user not exist');
-    }
-
-
-    else if (user[0].number == req.body.mobile_no) {
-        console.log('please enter diff no');
-    }
-
-    let userEmergencyData = []
-    if (user[0].emergency_contact) {
-
-        if (user[0].emergency_contact.trim().length > 0) {
-            const userEmergencyList = JSON.parse(user[0].emergency_contact.trim())
-            userEmergencyData = userEmergencyList
-            const count = userEmergencyList.length
-           
-            if (count > 2) {
-
-                // console.log('you are allowed only 3 emergency contact')
-                return res.send({
-                    data:[],
-                    err:true,
-                    message:'you are allowed only 3 emergency contact'
-                })
-            }
-            else {
-                var currentRelationCount = userEmergencyData.reduce(function (n, user) { return n + (user.relation == req.body.relation); }, 0); console.log(currentRelationCount);
-              
-               
-                if (currentRelationCount >= 2) {
-
-                    // console.log('you are allowed only 3 emergency contact')
-                    return res.send({
-                        data:[],
-                        err:true,
-                        message:'select other relation'
+    const user = await validationUser(req.body);
+    
+    if(Object.keys(user).length>0){
+        let userEmergencyData = []
+       
+        if (user.emergency_contact!='') {
+            
+            if (user.emergency_contact.trim().length > 0) {
+                const userEmergencyList = JSON.parse(user.emergency_contact.trim())
+                userEmergencyData = userEmergencyList
+                const phoneNo = userEmergencyData[0].mobile_no
+                const count = userEmergencyList.length
+                if (count > 2) {
+                    return res.status(401).json({
+                        data: [],
+                        err: true,
+                        message: 'you are allowed only 3 emergency contact'
                     })
                 }
-            }
-        
+                
+                var currentRelationCount = userEmergencyData.reduce(function (n, user) { return n + (user.relation == req.body.emergency_relation); }, 0); 
+                console.log("currentRelationCount",currentRelationCount);
+                if (currentRelationCount >= 2) {
+                    // console.log('you are allowed only 3 emergency contact')
+                    return res.status(401).json({
+                        data: [],
+                        err: true,
+                        message: 'select other relation'
+                    })
+                }
 
+                var currentEmergencyMobileCount = userEmergencyData.reduce(function (n, user) { return n + (user.mobile_no == req.body.emergency_mobile_no); }, 0); 
+                console.log("currentEmergencyMobileCount",currentEmergencyMobileCount);
+                if (currentEmergencyMobileCount >= 1) {
+                    // console.log('you are allowed only 3 emergency contact')
+                    return res.status(401).json({
+                        data: [],
+                        err: true,
+                        message: 'This Emergency number is already Used'
+                    })
+                }
+                
+            }
         }
 
+        
+        
+        let emergencyObject = { name: req.body.emergency_name, relation: req.body.emergency_relation, mobile_no: req.body.emergency_mobile_no }
+
+        console.log("emergencyObject",emergencyObject);
+        // userEmergencyData.push(emergencyObject)
+        userEmergencyData = [...userEmergencyData, emergencyObject]
+        const userEmergencyDataString = JSON.stringify(userEmergencyData)
+        await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
+        
+        return res.status(200).json({
+            data:[],
+            err: false,
+            message: 'data added successfully'
+        })
     }
-
-    let emergencyObject = { name: req.body.name, relation: req.body.relation, mobile_no: req.body.mobile_no }
-
-    // userEmergencyData.push(emergencyObject)
-    userEmergencyData = [...userEmergencyData,emergencyObject]
-
-    const userEmergencyDataString = JSON.stringify(userEmergencyData)
-    // console.log("yessssss"+userEmergencyData,userEmergencyDataString);
-    
-
-   await  UserReg.updateOne( {"number": req.body.login_mobileno}, {$set : { "emergency_contact" : userEmergencyDataString }},function(err,doc){console.log("data error"+err);} ).clone()
-
-  return res.send({
-    
-    err:false,
-    message:'data added successfully'
-})
-
 }
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
- }
-module.exports.getEmergency = async function(req,res){
-    const user =  await UserReg.find({
-        number:req.body.login_mobileno
-    },{'emergency_contact':true})
+
+module.exports.getEmergency = async function (req, res) {
+    const user = await UserReg.find({
+        number: req.body.login_mobileno
+    }, { 'emergency_contact': true })
 
     // console.log(user);
-    res.send({
-        
-        message:"data retrieve success",
-        data:JSON.parse(user[0].emergency_contact),
-        err:false
+    return res.status(200).json({
+
+        message: "data retrieve success",
+        data: JSON.parse(user[0].emergency_contact),
+        err: false
     })
+}
+
+
+// module.exports.TestFunction = async function (req, res) {
+
+//    let x = await controller1.SignUp
+//    console.log(x);
+
+// //   var y =  x.EmergencyContact
+
+// //   console.log(y);
+//     // const user =  await UserReg.find({
+//     //     number:req.body.login_mobileno
+//     // },{'emergency_contact':true})
+
+
+//     //  var data =JSON.parse(user[0].emergency_contact)
+
+//     //  var phoneNo = data[0].mobile_no
+
+//     //  console.log(phoneNo);
+//     //    const otpnumbergenrate = otp_Generator.generate(6,{
+//     //     digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
+//     // });
+
+//     // // console.log(otpnumbergenerate);
+
+//     //  var options = {
+//     //     "method": "POST",
+//     //     "hostname": "2factor.in",
+//     //     "port": null,
+//     //     "path": `/API/V1/fda7bc0b-20f9-11e7-929b-00163ef91450/SMS/${phoneNo}/${otpnumbergenrate}/educheck_otp`,
+//     //     "headers": {
+//     //       "content-type": "application/x-www-form-urlencoded"
+//     //     }
+//     //   };
+
+
+//     //   var req = http.request(options, function (res) {
+//     //     var chunks = [];
+
+//     //     res.on("data", function (chunk) {
+//     //       chunks.push(chunk);
+//     //     });
+
+//     //     res.on("end", function () {
+//     //       var body = Buffer.concat(chunks);
+//     //       console.log(body.toString());
+//     //     });
+//     //   });
+
+//     //   req.write(qs.stringify({}));
+//     //   req.end();
+
+
+
+
+//     //  console.log(
+//     //     valueOfA, valueOfB
+//     //   )
+
+
+
+
+//     //  const otpnumbergenrate = otp_Generator.generate(6,{
+//     //     digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
+//     // });
+
+
+// }
+
+
+module.exports.deleteEmergencyContact = async function (req, res) {
+   const user = await UserReg.find({
+        number: req.body.login_mobileno
+   })
+   var data = JSON.parse(user[0].emergency_contact)
+    // console.log(data);
+  
+   
+    
+
+    data.forEach(function(item){ delete item.mobile_no,delete item.name,delete item.relation});
+
+    //  console.log(JSON.stringify(data));
+
+    var ref = JSON.stringify(data)
+
+     await UserReg.updateOne({ "number": req.body.login_mobileno }, { $set: { "emergency_contact": ref } })
+
+     
+
+
 }
