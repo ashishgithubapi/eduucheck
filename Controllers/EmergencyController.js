@@ -130,92 +130,53 @@ module.exports.getEmergency = async function (req, res) {
 }
 
 
-// module.exports.TestFunction = async function (req, res) {
 
-//    let x = await controller1.SignUp
-//    console.log(x);
-
-// //   var y =  x.EmergencyContact
-
-// //   console.log(y);
-//     // const user =  await UserReg.find({
-//     //     number:req.body.login_mobileno
-//     // },{'emergency_contact':true})
-
-
-//     //  var data =JSON.parse(user[0].emergency_contact)
-
-//     //  var phoneNo = data[0].mobile_no
-
-//     //  console.log(phoneNo);
-//     //    const otpnumbergenrate = otp_Generator.generate(6,{
-//     //     digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
-//     // });
-
-//     // // console.log(otpnumbergenerate);
-
-//     //  var options = {
-//     //     "method": "POST",
-//     //     "hostname": "2factor.in",
-//     //     "port": null,
-//     //     "path": `/API/V1/fda7bc0b-20f9-11e7-929b-00163ef91450/SMS/${phoneNo}/${otpnumbergenrate}/educheck_otp`,
-//     //     "headers": {
-//     //       "content-type": "application/x-www-form-urlencoded"
-//     //     }
-//     //   };
-
-
-//     //   var req = http.request(options, function (res) {
-//     //     var chunks = [];
-
-//     //     res.on("data", function (chunk) {
-//     //       chunks.push(chunk);
-//     //     });
-
-//     //     res.on("end", function () {
-//     //       var body = Buffer.concat(chunks);
-//     //       console.log(body.toString());
-//     //     });
-//     //   });
-
-//     //   req.write(qs.stringify({}));
-//     //   req.end();
-
-
-
-
-//     //  console.log(
-//     //     valueOfA, valueOfB
-//     //   )
-
-
-
-
-//     //  const otpnumbergenrate = otp_Generator.generate(6,{
-//     //     digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
-//     // });
-
-
-// }
 
 
 module.exports.deleteEmergencyContact = async function (req, res) {
-   const user = await UserReg.find({
-        number: req.body.login_mobileno
-   })
-   var data = JSON.parse(user[0].emergency_contact)
+    const user = await validationUser(req.body,"single");
+
+    if (typeof user ===undefined) {
+        return res.status(401).json({
+            data: [],
+            err: true,
+            message: 'Login User Not exist'
+        })
+    }
+
+    let emergencyData=[]
+    
+    
+    if(user.emergency_contact.trim()!='')
+    {
+        emergencyData= JSON.parse(user.emergency_contact)
+    }
     // console.log(data);
   
    
     
+    emergencyData = emergencyData.filter(function( obj ) {
+        return obj.mobile_no !== req.body.emergency_mobile_no;
+      });
 
-    data.forEach(function(item){ delete item.mobile_no,delete item.name,delete item.relation});
+      
 
-    //  console.log(JSON.stringify(data));
+      let emergencyDataStringify='';
 
-    var ref = JSON.stringify(data)
+      if(emergencyData.length>0){
+        emergencyDataStringify=JSON.stringify(emergencyData);
+      }
+    
+      
+     
+     await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "emergency_contact": emergencyDataStringify } }, function (err, doc) { console.log("data error" + err); }).clone()
 
-     await UserReg.updateOne({ "number": req.body.login_mobileno }, { $set: { "emergency_contact": ref } })
+     return res.status(200).json({
+
+        message: "data deleted successfully",
+        data: emergencyData,
+        err: false
+    })
 
      
 

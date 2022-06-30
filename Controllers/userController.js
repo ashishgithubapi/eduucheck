@@ -53,6 +53,8 @@ module.exports.SignUp = async(req,res)=>{
       req.end();
     
     return res.status(200).json({
+      err:false,
+      data:[],
         message:"otp send successfully"
     });
     required:true
@@ -106,7 +108,8 @@ module.exports.verifyOtp = async(req,res)=>{
         return res.status(200).send({
             message:"verify otp successful",
             data: getUserObject,
-            is_register:is_register
+            is_register:is_register,
+            err:false
 
             // token: token,
             // data: result
@@ -114,7 +117,9 @@ module.exports.verifyOtp = async(req,res)=>{
 
       } else{
           return res.status(400).send({
-            message:"otp was wrong"
+            message:"otp was wrong",
+            err:true,
+            data:[]
           })
       }
 
