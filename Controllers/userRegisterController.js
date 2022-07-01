@@ -27,7 +27,8 @@ module.exports.Userreg = async(req,res)=>{
             doc_base64data_image=req.body.doc_filename;
         }
     }*/
-    
+    let gst_base64data_image = '';
+    let doc_base64data_image = '';
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     if (!req.body.email.match(validRegex)) {
