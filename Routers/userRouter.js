@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const{ SignUp, verifyOtp} = require('../Controllers/userController');
 const{Userreg} = require('../Controllers/userRegisterController')
+const{userRoleList} = require('../Controllers/userRoleController')
 
 const{EmergencyContact, getEmergency, deleteEmergencyContact,addEmergencyContactValidation} = require('../Controllers/EmergencyController')
 
@@ -24,6 +25,9 @@ router.route('/getemergencycontact')
 
 router.route('/deleteemergencycontact')
 .delete(deleteEmergencyContact)
+
+router.route('/getUserRole')
+.get(userRoleList)
 
 // router.route('/test')
 // .post(TestFunction)

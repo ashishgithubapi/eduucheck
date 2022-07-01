@@ -1,4 +1,5 @@
 const {UserReg} = require('../Model/userRegister')
+const {UserRole} = require('../Model/userRoleModel')
 const Jimp = require("jimp"); const fs = require("fs");
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
@@ -51,6 +52,8 @@ module.exports.Userreg = async(req,res)=>{
     const emailOrMobileNoExist = await UserReg.find({
          $or : [{email:req.body.email},{number:req.body.number}]
     }).count();
+
+    const userRoleList = await UserRole.findOne({_id : Object(req.body.application_type)},{role:true});
     console.log(emailOrMobileNoExist);
     if(emailOrMobileNoExist>0){
         return res.status(401).json({
@@ -59,7 +62,7 @@ module.exports.Userreg = async(req,res)=>{
             message: 'Either mobile number of email id is exist'
         })
     }
-
+    
     const otpHolderCount = await Otp.find({
         number: req.body.number
       }).count();
@@ -71,10 +74,12 @@ module.exports.Userreg = async(req,res)=>{
             message: 'Mobile number is not exist IN OTP, Kindly Generate and Verify OTP'
         })
       }
+      
 
     console.log("sdfdfdsfsfs",emailOrMobileNoExist);
     const user = new UserReg({
-        application_type: req.body.application_type,
+        application_type: userRoleList.role,
+        application_type_id: userRoleList._id,
         name: req.body.name,
         number:req.body.number,
         email:req.body.email,

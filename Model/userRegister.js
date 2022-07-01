@@ -2,6 +2,7 @@ const {Schema,model} = require('mongoose');
 
 const userRegSchema = Schema({
     application_type: String,
+    application_type_id:String,
     name: String,
     password:String,
     number: String,
