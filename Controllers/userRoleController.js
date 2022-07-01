@@ -13,6 +13,6 @@ module.exports.userRoleList = async(req,res)=>{
     return res.status(200).json({
         data: userRoleLists,
         err:false,
-        message:"Successfully registered!!"
+        message:"Success!!"
     })
 }
