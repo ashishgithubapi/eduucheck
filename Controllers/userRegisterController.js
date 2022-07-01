@@ -5,7 +5,7 @@ const {Otp} = require('../Model/otpModel');
 
 module.exports.Userreg = async(req,res)=>{
    
-    if (typeof localStorage === "undefined" || localStorage === null) {
+    /*if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
      }
@@ -26,7 +26,7 @@ module.exports.Userreg = async(req,res)=>{
             Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write('/tmp/' +req.body.doc_filename); });
             doc_base64data_image=req.body.doc_filename;
         }
-    }
+    }*/
     
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
