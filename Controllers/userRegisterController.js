@@ -3,6 +3,7 @@ const {UserRole} = require('../Model/userRoleModel')
 const Jimp = require("jimp"); const fs = require("fs");
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
+var nodemailer = require('nodemailer')
 
 module.exports.Userreg = async(req,res)=>{
    
@@ -103,5 +104,35 @@ module.exports.Userreg = async(req,res)=>{
         data: user,
         err:false,
         message:"Successfully registered!!"
+    })
+}
+
+
+module.exports.sendEmail = function(req,res){
+    console.log('send mail successfully');
+
+    var transporter = nodemailer.createTransport({
+        service:'gmail',
+        auth:{
+            user:'ashish.trrev@gmail.com',
+            pass:'sulrexgglwseqxqg'
+        }
+    })
+
+    var mailOptions = {
+        from:'ashish.trrev@gmail.com',
+        to:'am5932809@gmail.com',
+        subject:'email is there',
+        text:'helllloloooooo'
+    }
+
+    transporter.sendMail(mailOptions,function(err,info){
+        if(err){
+            console.log(err);
+        }
+
+        else{
+            console.log('email sent'+info.response);
+        }
     })
 }
