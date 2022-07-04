@@ -37,9 +37,9 @@ router.route('/deleteemergencycontact')
 router.route('/getUserRole')
 .get(userRoleList)
 
-router.route('/sendemail')
+/*router.route('/sendemail')
 .get(sendEmail)
-
+*/
 // router.route('/test')
 // .post(TestFunction)
 
