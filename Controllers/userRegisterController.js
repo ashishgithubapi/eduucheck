@@ -129,3 +129,33 @@ module.exports.Userreg = async(req,res)=>{
         message:"Successfully registered!!"
     })
 }
+
+
+module.exports.sendEmail = function(req,res){
+    console.log('send mail successfully');
+
+    var transporter = nodemailer.createTransport({
+        service:'gmail',
+        auth:{
+            user:'ashish.trrev@gmail.com',
+            pass:'sulrexgglwseqxqg'
+        }
+    })
+
+    var mailOptions = {
+        from:'ashish.trrev@gmail.com',
+        to:'am5932809@gmail.com',
+        subject:'email is there',
+        text:'helllloloooooo'
+    }
+
+    transporter.sendMail(mailOptions,function(err,info){
+        if(err){
+            console.log(err);
+        }
+
+        else{
+            console.log('email sent'+info.response);
+        }
+    })
+}
