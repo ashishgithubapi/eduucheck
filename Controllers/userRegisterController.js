@@ -3,7 +3,26 @@ const {UserRole} = require('../Model/userRoleModel')
 const Jimp = require("jimp"); const fs = require("fs");
 const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
+const ObjectId = require('mongodb').ObjectId;
+module.exports.UserList = async(req,res)=>{
+const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true});
+    return res.status(200).json({
+        data: userLists,
+        err: false,
+        message: ''
+    })
+}
+module.exports.UpdateUser = async(req,res)=>{
+    console.log("request",req.body);
+const updateUser = await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "is_activate": req.body.is_activate } });
+    return res.status(200).json({
+        data: req.body,
+        err: false,
+        message: ''
+    })
+}
 
+//await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
 module.exports.Userreg = async(req,res)=>{
    
     /*if (typeof localStorage === "undefined" || localStorage === null) {
@@ -63,6 +82,10 @@ module.exports.Userreg = async(req,res)=>{
         })
     }
     
+
+    
+
+
     const otpHolderCount = await Otp.find({
         number: req.body.number
       }).count();
@@ -88,7 +111,8 @@ module.exports.Userreg = async(req,res)=>{
         referalcode:req.body.referalcode,
         gst_filename:gst_base64data_image,
         doc_filename:doc_base64data_image,
-        emergency_contact:""
+        emergency_contact:"",
+        is_activate:"0"
         
         
     })

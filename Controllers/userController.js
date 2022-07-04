@@ -73,7 +73,15 @@ module.exports.verifyOtp = async(req,res)=>{
       });
 
       console.log("userRegister",getUserObject);
-
+      if(getUserObject.length>0){
+      if(getUserObject[0]['is_activate']=="0"){
+        return res.status(400).send({
+          message:"User is not active, kindly contact admin",
+          err:true,
+          data:[]
+        })
+      }
+    }
      
     //   console.log(otpHolder+"yeh otp holder hai");
       if(otpHolder.length==0) return res.status(400).send('please enter the proper otp')
@@ -97,6 +105,7 @@ module.exports.verifyOtp = async(req,res)=>{
        }
        else{
         is_register=1;
+        
         userObject =getUserObject;
         userObject['otp']=rightOtpFind.otp;
        }

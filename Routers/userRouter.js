@@ -1,9 +1,11 @@
 const router = require('express').Router();
 const{ SignUp, verifyOtp} = require('../Controllers/userController');
-const{Userreg} = require('../Controllers/userRegisterController')
+const{Userreg,UserList,UpdateUser} = require('../Controllers/userRegisterController')
 const{userRoleList} = require('../Controllers/userRoleController')
 
 const{EmergencyContact, getEmergency, deleteEmergencyContact,addEmergencyContactValidation} = require('../Controllers/EmergencyController')
+var cors = require('cors');
+router.use(cors()); 
 
 router.route('/registerotp')
 .post(SignUp)
@@ -11,8 +13,14 @@ router.route('/registerotp')
 router.route('/verifyotp')
 .post(verifyOtp)
 
+router.route('/updateUser')
+.post(UpdateUser)
+
 router.route('/userreg')
 .post(Userreg)
+
+router.route('/getUser')
+.get(UserList)
 
 router.route('/addEmergencyContactValidation')
 .post(addEmergencyContactValidation)

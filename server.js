@@ -1,5 +1,7 @@
 require('dotenv/config');
 const mongoose = require('mongoose')
+const cors = require('cors');
+
 
 const app = require('./app');
 
@@ -25,7 +27,7 @@ mongoose.connect(DB,{
 });
 
 const port = process.env.PORT || 3001
-
+app.use(cors());
 app.listen(port,()=>{
     console.log(`app running on port ${port}`);
 })

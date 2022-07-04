@@ -27,5 +27,7 @@
     "slugify": "^1.6.5",
     "util": "^0.12.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "cors": "^2.8.5"
+  }
 }
