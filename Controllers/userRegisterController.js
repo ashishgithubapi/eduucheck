@@ -58,9 +58,9 @@ module.exports.Userreg = async(req,res)=>{
         if(req.body.gst_base64data.length>0){
             var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
             const buffer = Buffer.from(data, "base64"); 
-            gst_base64data_image=req.body.gst_filename;
+            gst_base64data_image=req.body.number+'_'+gst_base64data_image;
             Jimp.read(buffer, (err, res) => {if (err) res.status(401).json({err:err}); 
-                res.quality(5).write("./images/"+req.body.number+'_'+gst_base64data_image+""); });  
+                res.quality(5).write("./images/"+gst_base64data_image+""); });  
                 
         }
     }
@@ -68,10 +68,10 @@ module.exports.Userreg = async(req,res)=>{
         if(req.body.doc_base64data.length>0){
             var data = req.body.doc_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ... 
             const buffer = Buffer.from(data, "base64"); 
-            doc_base64data_image=req.body.doc_filename;
+            doc_base64data_image=req.body.number+'_'+req.body.doc_filename;
             Jimp.read(buffer, (err, res) => { 
                 if (err) res.status(401).json({err:err}); 
-                res.quality(5).write("./images/"+req.body.number+'_'+req.body.doc_filename+""); });
+                res.quality(5).write("./images/"+doc_base64data_image+""); });
             
         }
     }
