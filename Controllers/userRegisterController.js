@@ -13,7 +13,7 @@ module.exports.UploadFile = async(req,res)=>{
 // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
 const buffer = Buffer.from(imageData, "base64");
 console.log("55");
-Jimp.read(buffer, (err, res) => {\
+Jimp.read(buffer, (err, res) => {
     console.log("66");
     console.log("err",err);
     console.log("res",res);
