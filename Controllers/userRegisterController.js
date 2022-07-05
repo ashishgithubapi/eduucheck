@@ -101,19 +101,19 @@ module.exports.Userreg = async(req,res)=>{
 
     const userRoleList = await UserRole.findOne({_id : Object(req.body.application_type)},{role:true});
     console.log(emailOrMobileNoExist);
-    /*if(emailOrMobileNoExist>0){
+    if(emailOrMobileNoExist>0){
         return res.status(401).json({
             data: [],
             err: true,
             message: 'Either mobile number of email id is exist'
         })
-    }*/
+    }
     
 
     
 
 
-    /*const otpHolderCount = await Otp.find({
+    const otpHolderCount = await Otp.find({
         number: req.body.number
       }).count();
 
@@ -123,7 +123,7 @@ module.exports.Userreg = async(req,res)=>{
             err: true,
             message: 'Mobile number is not exist IN OTP, Kindly Generate and Verify OTP'
         })
-      }*/
+      }
       
 
     console.log("sdfdfdsfsfs",emailOrMobileNoExist);
