@@ -26,19 +26,7 @@ console.log("88");
 return res.status(200).json({msg:'success'});
     }
 
-/*
-const Jimp = require("jimp");
-const fs = require("fs");
-// Base64 string
-const data =
-  "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAP////////////////////////////////////////////////////////////////////////////////////8B///////////////////////////////////////////////////////////////////////////////////////AABEIAMgBLAMBEQACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/ACqJCgAoAKACgAoAWgAoAKBBQAUAFABQAUAFABQAmaAEoGFABQAUgFoAWgQUAFABQAUAJQAUAFABQMKACgAoASgAoAKACgBaYBQAUAFABQAUALQAUAFAgoAKACgAoAKAEoGJQAUAJQAtAC0AFIBaBBQAUAFABQAUAJQAlAwoAKAFoAKAEoAKACgAoAKAFpgFABQAUAFAC0AFAgoAKACgAoAKACgBCaAE/wA/WgYlAwoAKBC0gFoAWgQUAFABQAlAwoAKAEoAKACgAoAKACgAoAKACgAoAKAFpgFABQAUALQAUAFAgoAKACgAoAKAEoASgYlAxKAFoAKBDqQC0CCgAoASgAoAKBhQAUAJQAUAJQAUDCgAoEFABQAUALQAUALTAKACgAoAWgAoAKBBQAUAFABQA2gYUDEoAKAEoAWkIWgBaBC0AJQAUDCmFhM0BYKACgAoAKACgBKACgYUAFIAoAKACgBaAEoAdTEFABQAUALQAUAFAgoAKACgBDQMbQMKACgBKAFoAWkIWgAoEFACUxiUAFABQAUAFAC0AFABQAlABQMKACkAUAFABQAUAFADqYgoAKAFoAKBBQAUAFABQAhoGNoGFABQAUAFAC0CFpALQISmAlAwoAKAEoGFABQAUAFABmgAoAKACgAoAKACgAoAKACkAtAC0xBQAUALQAUCCgAoAKACgBDQMbQMKAEoAWgAoAWgQtIAoEJTGFACUDCgAoAMUALigVwxQFxMUDCgBKACgAoAKAFoAKAEoAKAFpAFADqYgoAKAFoAKBBQAUAFABQAhoGNoGFABSAWgAoEFABTGFAhKBhQAUCHYoC4tIQUAFACUAFAxKAEpgJQMKACgAoAKACgYUhC0CFoAWmAUAFAC0AFAgoAKACgAoASgYlABQAUgFoAKACgBOtMBKACgYUAAoELmgLBmgAoASgAoAKBhQAUAJQAUAFABQAUAFAxaQhaBBQAtMAoAKAFoAKBBQAUAFABQAUAJSGJQAUALQAUCCgBD60xiUDCgAoAKACgAoAKACgAoAKBBQAUDCgBKACgAoGFABQIWkAtAgoAWmAUAFAC0AFAgoAKACgAoAKACkAlABQMKACgQUDDrTATFACUDCgBaBBQAUAGKACgAoAKACgAoAKAEoGFACUALQAUALSEFABQAtMAoAKAFoAKBBQAUAFABQAUAFIBKBhQAUAJTAKACgAoAKACgAoAKAFxQIOlADaBjhQDCkIKACmAUDEoAKAEoGFAC0hC0AFACUALTAKAFoAKACgQUAFABQAUAFABSASgYUAFABTASgAoAKACgAoAKACgB1AhtAxKBjhQSxaQgoGJTAKBiUAFABQAUAFIBaACgAoAKYBQAUAFAC0CCgAoAKACgAoAKQBQAlACUDFoASgBKYBQAtABQAUAAoAdSJExQUJimFxwoEFIQUAFMYlAxKACgANAAKACkAtABQIKACmMKACgBaACgQUAFABQAUAFABSAKAEoAKBhQAUAJTAKACgAoAKACgB1IkKACgBaAEoAKACmMSgYlABQAGgAoAWkAUAFAgoAKYwoAKAFoAKBBQAUAFABQAUAFIAoASgdwxQFxKACgApgFABQAtACUAAoBjqQgoELQAUAJTASgYlAwoAKACgBKQxaBC0CCgAoAKACmMKACgBaACgQUAFABQAUAFABSAKACgBKACgYUAJTAKAFoAKAEoBCUAPpCCgQtACUAFMYlAxKACgAoAKACkAtAgoAWgAoASgApjCgAoAKAFoEFABQAUAFABQAUgCgBKACgBaAEoGFACUALTEFACUDCgBaBC5oAKAEoAKACgBKBhQAUgCgBaBBQAUALQAUAFACUxhQAUALQAUCCgAoAKACgAoAKQBQAUAFABQAlAwoAKACmAUCDFABQAUAFABQAUAJQMKACgAoAKQC0AFAgoAWgAoAKACgBKYwoAKACgBaACgAoEFABQAUAFABQAtIBKAEoAWgAoAKAEpgGKAFpAFABTEJQMKBiUAFIBaAEoAKACgBaAFoEFABQAUAFABQAlMYUAFABQAtABQAUCCgAoAKACgAoAKQBQAlAC0AFABQAUwCgApAGKAEphYM0DsHNACUALSAKACgAoAKBC0AFABQAUAFABQAUAJTGFABQAUALQAUAFAgoAKACgAoAKACkAUAFABQAUAFABQAUAFABQAUAJQAUAFABQAtACUDCgQtABQAUAFABQAUAFMAoASgYUAFABQAUALQAUCCgAoAKACgAoAKQBQAUAFABQAUAFABQAUAFABQAUAFABQAUAFACUDFoEFABQAUAFABQAUAFMAoASgYUAFABQAUALQAUAFABQIKACgAoAKQBQAUAFABQAUAFABQAUAFAC0CCgAoAKACgBKBhQAUAFABQAUAFABTAKACgAoA/wD/2Q==";
-// Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
-const buffer = Buffer.from(data, "base64");
-Jimp.read(buffer, (err, res) => {
-  if (err) throw new Error(err);
-  res.quality(5).write("resized.jpg");
-});
-*/
+
 module.exports.UserList = async(req,res)=>{
 const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true});
     return res.status(200).json({
@@ -63,27 +51,31 @@ module.exports.Userreg = async(req,res)=>{
     /*if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
-     }
+     }*/
     let gst_base64data_image = '';
     let doc_base64data_image = '';
     if('gst_base64data' in req.body){
         if(req.body.gst_base64data.length>0){
-            var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...       
+            var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
             const buffer = Buffer.from(data, "base64"); 
-            Jimp.read(buffer, (err, res2) => {if (err) throw new Error(err); res2.quality(100).write('/tmp/' +req.body.gst_filename); });  
-            gst_base64data_image=req.body.gst_filename;    
+            gst_base64data_image=req.body.gst_filename;
+            Jimp.read(buffer, (err, res) => {if (err) res.status(401).json({err:err}); 
+                res.quality(5).write("./images/"+req.body.number+'_'+gst_base64data_image+""); });  
+                
         }
     }
     if('doc_base64data' in req.body){
         if(req.body.doc_base64data.length>0){
-            var data = req.body.doc_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...  
+            var data = req.body.doc_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ... 
             const buffer = Buffer.from(data, "base64"); 
-            Jimp.read(buffer, (err, res) => { if (err) throw new Error(err); res.quality(100).write('/tmp/' +req.body.doc_filename); });
             doc_base64data_image=req.body.doc_filename;
+            Jimp.read(buffer, (err, res) => { 
+                if (err) res.status(401).json({err:err}); 
+                res.quality(5).write("./images/"+req.body.number+'_'+req.body.doc_filename+""); });
+            
         }
-    }*/
-    let gst_base64data_image = '';
-    let doc_base64data_image = '';
+    }
+   
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     if (!req.body.email.match(validRegex)) {
@@ -109,19 +101,19 @@ module.exports.Userreg = async(req,res)=>{
 
     const userRoleList = await UserRole.findOne({_id : Object(req.body.application_type)},{role:true});
     console.log(emailOrMobileNoExist);
-    if(emailOrMobileNoExist>0){
+    /*if(emailOrMobileNoExist>0){
         return res.status(401).json({
             data: [],
             err: true,
             message: 'Either mobile number of email id is exist'
         })
-    }
+    }*/
     
 
     
 
 
-    const otpHolderCount = await Otp.find({
+    /*const otpHolderCount = await Otp.find({
         number: req.body.number
       }).count();
 
@@ -131,7 +123,7 @@ module.exports.Userreg = async(req,res)=>{
             err: true,
             message: 'Mobile number is not exist IN OTP, Kindly Generate and Verify OTP'
         })
-      }
+      }*/
       
 
     console.log("sdfdfdsfsfs",emailOrMobileNoExist);
@@ -152,11 +144,11 @@ module.exports.Userreg = async(req,res)=>{
         
     })
     //  user.save();
-    await user.save((err, u) => { 
+    /*await user.save((err, u) => { 
         //console.log("what is u??"+u); 
         console.log(err);
     
-    });
+    });*/
 
     return res.status(200).json({
         data: user,
