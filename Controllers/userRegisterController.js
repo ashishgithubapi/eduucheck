@@ -144,11 +144,11 @@ module.exports.Userreg = async(req,res)=>{
         
     })
     //  user.save();
-    /*await user.save((err, u) => { 
+    await user.save((err, u) => { 
         //console.log("what is u??"+u); 
         console.log(err);
     
-    });*/
+    });
 
     return res.status(200).json({
         data: user,
