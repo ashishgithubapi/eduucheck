@@ -7,17 +7,22 @@ const ObjectId = require('mongodb').ObjectId;
 
 
 module.exports.UploadFile = async(req,res)=>{
+    console.log("33");
     const imageData = req.body.data;
-   
+   console.log("44");
 // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
 const buffer = Buffer.from(imageData, "base64");
-Jimp.read(buffer, (err, res) => {
+console.log("55");
+Jimp.read(buffer, (err, res) => {\
+    console.log("66");
     console.log("err",err);
     console.log("res",res);
   if (err) return  res.status(401).json({err:err});;
+  console.log("77");
   res.quality(5).write("./images/"+req.body.imageName+"");
   
 });
+console.log("88");
 return res.status(200).json({msg:'success'});
     }
 
