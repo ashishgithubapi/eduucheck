@@ -45,7 +45,7 @@ return res.status(200).json({msg:'success'});
 
 
 module.exports.UserList = async(req,res)=>{
-const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true,gst_filename:true,doc_filename:true});
+const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true,gst_filename:true,doc_filename:true,referral_count:true,referalcode:true,points:true,payment_status:true});
     return res.status(200).json({
         data: userLists,
         err: false,
@@ -123,7 +123,7 @@ module.exports.Userreg = async(req,res)=>{
     console.log("i m here points2");
     const referralCodeRecord = await UserReg.findOne({
         referalcode:req.body.referalcode
-   },{_id:true,points:true});
+   },{_id:true,points:true,referral_count:true});
    
    if(referralCodeRecord){
         points=50;
@@ -170,7 +170,9 @@ module.exports.Userreg = async(req,res)=>{
         doc_filename:doc_base64data_image,
         emergency_contact:"",
         is_activate:"0",
-        points:points
+        points:points,
+        payment_status:0,
+        referral_count:0
         
         
     })
@@ -181,7 +183,8 @@ module.exports.Userreg = async(req,res)=>{
     if(referralCodeRecord){
         console.log("here5");
     let sharePoints = referralCodeRecord['points']+points;
-    await UserReg.updateOne({ "_id": ObjectId(referralCodeRecord['_id'] )}, { $set: { "points": sharePoints } });
+    let referralCodeCount = referralCodeRecord['referral_count']+1;
+    await UserReg.updateOne({ "_id": ObjectId(referralCodeRecord['_id'] )}, { $set: { "points": sharePoints,"referral_count":referralCodeCount } });
     }
     console.log("here4");
     return res.status(200).json({

@@ -30,7 +30,9 @@ const userRegSchema = Schema({
     
       emergency_contact:String,
       is_activate:String,
-      points:Number
+      points:Number,
+      payment_status:String,
+      referral_count:Number
       
 
 });
