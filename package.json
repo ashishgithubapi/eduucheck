@@ -29,6 +29,7 @@
     "util": "^0.12.4"
   },
   "devDependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1"
   }
 }

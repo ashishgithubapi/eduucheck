@@ -29,7 +29,8 @@ const userRegSchema = Schema({
       doc_filename:String,
     
       emergency_contact:String,
-      is_activate:String
+      is_activate:String,
+      points:Number
       
 
 });
