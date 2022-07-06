@@ -84,7 +84,11 @@ module.exports.verifyOtp = async(req,res)=>{
     }
      
     //   console.log(otpHolder+"yeh otp holder hai");
-      if(otpHolder.length==0) return res.status(400).send('please enter the proper otp')
+      if(otpHolder.length==0) return res.status(400).send({
+        message:"Please enter valid OTP",
+        err:true,
+        data:[]
+      })
       const rightOtpFind = otpHolder[otpHolder.length-1];
     //   console.log(rightOtpFind+"otpfind");
     //   console.log(req.body.otp+" yeh body me otp hai");

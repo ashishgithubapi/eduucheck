@@ -1,7 +1,7 @@
 const { UserReg } = require('../Model/userRegister');
 const ObjectId = require('mongodb').ObjectId;
 
-const validationUser = async (req,type)=>{
+const validationUser = async (res,req,type)=>{
     var id = req.login_user_id;
     //you can now query
     const user = await UserReg.findOne({
@@ -32,7 +32,7 @@ const validationUser = async (req,type)=>{
 module.exports.addEmergencyContactValidation = async function (req, res) {
    
     //you can now query
-    const user = await validationUser(req.body,'all');
+    const user = await validationUser(res,req.body,'all');
     if(Object.keys(user).length>0){
         return res.status(200).json({
             data: [],
@@ -46,7 +46,7 @@ module.exports.addEmergencyContactValidation = async function (req, res) {
 module.exports.EmergencyContact = async function (req, res) {
 
     //transform your param into an ObjectId
-    const user = await validationUser(req.body,"all");
+    const user = await validationUser(res,req.body,"all");
     
     if(Object.keys(user).length>0){
         let userEmergencyData = []
@@ -111,7 +111,7 @@ module.exports.EmergencyContact = async function (req, res) {
 
 module.exports.getEmergency = async function (req, res) {
 
-    const user = await validationUser(req.body,"single");
+    const user = await validationUser(res,req.body,"single");
     let emergencyData=[]
     
     if(user != null){
@@ -134,7 +134,7 @@ module.exports.getEmergency = async function (req, res) {
 
 
 module.exports.deleteEmergencyContact = async function (req, res) {
-    const user = await validationUser(req.body,"single");
+    const user = await validationUser(res,req.body,"single");
 
     if (typeof user ===undefined) {
         return res.status(401).json({
