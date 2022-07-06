@@ -45,7 +45,7 @@ return res.status(200).json({msg:'success'});
 
 
 module.exports.UserList = async(req,res)=>{
-const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true,gst_filename:true,doc_filename:true,referral_count:true,referalcode:true,points:true,payment_status:true,emergency_contact:true});
+const userLists = await UserReg.find({},{_id:true,name:true,number:true,address:true,email:true,is_activate:true,gst_filename:true,doc_filename:true,referral_count:true,referalcode:true,points:true,payment_status:true});
     return res.status(200).json({
         data: userLists,
         err: false,
