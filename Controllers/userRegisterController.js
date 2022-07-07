@@ -107,8 +107,8 @@ module.exports.Userreg = async(req,res)=>{
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
      }*/
-    let gst_base64data_image = '';
-    let doc_base64data_image = '';
+    let gst_base64data_image = req.body.gst_filename;
+    let doc_base64data_image = req.body.doc_filename;
 
     
     /*if('gst_base64data' in req.body){
@@ -134,28 +134,7 @@ module.exports.Userreg = async(req,res)=>{
     }*/
 
   
-    if(req.file!==undefined){
-        console.log("Received file" + req.file.originalname);
-        var src = fs.createReadStream(req.file.path);
-        var dest = fs.createWriteStream('images/' + req.body.filename);
-        src.pipe(dest);
-        src.on('end', function() {
-            fs.unlinkSync(req.file.path);
-            gst_base64data_image=req.body.filename;
-            //res.json('OK: received ' + req.body.filename);
-            return res.status(200).json({
-                data: req.body.filename,
-                err: false,
-                message: 'File is uploaded successfully'
-            })
-        });
-        src.on('error', function(err) { return res.status(401).json({
-            data: err,
-            err: true,
-            message: 'Something went wrong.'
-        }) 
-    });
-        }
+    
    
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
