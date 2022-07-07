@@ -44,7 +44,7 @@ Jimp.read(buffer, (err, res) => {
 console.log("88");
 return res.status(200).json({msg:'success'});*/
 const multer = require('multer');
-const upload = multer({dest:'uploads/'}).single("name");
+const upload = multer({dest:'images/'}).single("name");
 upload(req, res, (err) => {
     console.log("req file",req.file);
     console.log("req body",req.body.filename);
@@ -55,7 +55,7 @@ upload(req, res, (err) => {
     if(req.file!==undefined){
     console.log("Received file" + req.file.originalname);
     var src = fs.createReadStream(req.file.path);
-    var dest = fs.createWriteStream('uploads/' + req.body.filename);
+    var dest = fs.createWriteStream('images/' + req.body.filename);
     src.pipe(dest);
     src.on('end', function() {
     	fs.unlinkSync(req.file.path);
@@ -137,7 +137,7 @@ module.exports.Userreg = async(req,res)=>{
     if(req.file!==undefined){
         console.log("Received file" + req.file.originalname);
         var src = fs.createReadStream(req.file.path);
-        var dest = fs.createWriteStream('uploads/' + req.body.filename);
+        var dest = fs.createWriteStream('images/' + req.body.filename);
         src.pipe(dest);
         src.on('end', function() {
             fs.unlinkSync(req.file.path);
