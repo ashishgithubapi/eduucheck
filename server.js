@@ -28,6 +28,7 @@ mongoose.connect(DB,{
 
 const port = process.env.PORT || 3001
 app.use('/images', express.static('images'));
+app.use('/uploads', express.static('uploads'));
 app.use(cors());
 app.listen(port,()=>{
     console.log(`app running on port ${port}`);

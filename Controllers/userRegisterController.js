@@ -5,6 +5,8 @@ const {User} = require('../Model/userModel');
 const {Otp} = require('../Model/otpModel');
 const ObjectId = require('mongodb').ObjectId;
 const crypto = require('crypto');
+const multer = require('multer');
+const path = require('path');
 
 const referralCodeGenerate = async (len,userNumber) => {
     const generatedCode =  await crypto.randomBytes(Math.ceil(len/2))
@@ -23,9 +25,9 @@ const referralCodeGenerate = async (len,userNumber) => {
        }
 }
 
-module.exports.UploadFile = async(req,res)=>{
+module.exports.UploadFile = (req,res)=>{
     //console.log("33");
-    const imageData = req.body.data;
+    /*const imageData = req.body.data;
    //console.log("44");
 // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
 const buffer = Buffer.from(imageData, "base64");
@@ -40,7 +42,41 @@ Jimp.read(buffer, (err, res) => {
   
 });
 console.log("88");
-return res.status(200).json({msg:'success'});
+return res.status(200).json({msg:'success'});*/
+const multer = require('multer');
+const upload = multer({dest:'uploads/'}).single("name");
+upload(req, res, (err) => {
+    console.log("req file",req.file);
+    console.log("req body",req.body.filename);
+    
+    if(err) {
+      return res.status(400).send("Something went wrong!");
+    }
+    if(req.file!==undefined){
+    console.log("Received file" + req.file.originalname);
+    var src = fs.createReadStream(req.file.path);
+    var dest = fs.createWriteStream('uploads/' + req.body.filename);
+    src.pipe(dest);
+    src.on('end', function() {
+    	fs.unlinkSync(req.file.path);
+        //res.json('OK: received ' + req.body.filename);
+        return res.status(200).json({
+            data: req.body.filename,
+            err: false,
+            message: 'File is uploaded successfully'
+        })
+    });
+    src.on('error', function(err) { return res.status(401).json({
+        data: err,
+        err: true,
+        message: 'Something went wrong.'
+    }) 
+});
+    }
+
+  });
+
+     
     }
 
 
@@ -62,6 +98,8 @@ const updateUser = await UserReg.updateOne({ "_id": ObjectId(req.body.login_user
     })
 }
 
+
+
 //await UserReg.updateOne({ "_id": ObjectId(req.body.login_user_id )}, { $set: { "emergency_contact": userEmergencyDataString } }, function (err, doc) { console.log("data error" + err); }).clone()
 module.exports.Userreg = async(req,res)=>{
    
@@ -71,7 +109,9 @@ module.exports.Userreg = async(req,res)=>{
      }*/
     let gst_base64data_image = '';
     let doc_base64data_image = '';
-    if('gst_base64data' in req.body){
+
+    
+    /*if('gst_base64data' in req.body){
         if(req.body.gst_base64data.length>0){
             var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
             const buffer = Buffer.from(data, "base64"); 
@@ -91,7 +131,31 @@ module.exports.Userreg = async(req,res)=>{
                 res.quality(5).write("./images/"+doc_base64data_image+""); });
             
         }
-    }
+    }*/
+
+  
+    if(req.file!==undefined){
+        console.log("Received file" + req.file.originalname);
+        var src = fs.createReadStream(req.file.path);
+        var dest = fs.createWriteStream('uploads/' + req.body.filename);
+        src.pipe(dest);
+        src.on('end', function() {
+            fs.unlinkSync(req.file.path);
+            gst_base64data_image=req.body.filename;
+            //res.json('OK: received ' + req.body.filename);
+            return res.status(200).json({
+                data: req.body.filename,
+                err: false,
+                message: 'File is uploaded successfully'
+            })
+        });
+        src.on('error', function(err) { return res.status(401).json({
+            data: err,
+            err: true,
+            message: 'Something went wrong.'
+        }) 
+    });
+        }
    
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/

@@ -19,17 +19,18 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.4.0",
-    "multer": "^1.4.5-lts.1",
     "node-localstorage": "^2.2.1",
     "nodemailer": "^6.7.6",
     "nodemon": "^2.0.18",
     "otp-generator": "^4.0.0",
-    "path": "^0.12.7",
     "slugify": "^1.6.5",
     "util": "^0.12.4"
   },
   "devDependencies": {
     "cors": "^2.8.5",
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "fs": "^0.0.1-security",
+    "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7"
   }
 }
