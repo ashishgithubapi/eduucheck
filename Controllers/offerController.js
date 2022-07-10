@@ -32,7 +32,7 @@ upload(req, res, (err) => {
             message: 'File is uploaded successfully'
         })
     });
-    src.on('error', function(err) { return res.status(401).json({
+    src.on('error', function(err) { return res.status(201).json({
         data: err,
         err: true,
         message: 'Something went wrong.'

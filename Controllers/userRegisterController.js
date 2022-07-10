@@ -36,7 +36,7 @@ Jimp.read(buffer, (err, res) => {
     //console.log("66");
     //console.log("err",err);
     //console.log("res",res);
-  if (err) return  res.status(401).json({err:err});;
+  if (err) return  res.status(201).json({err:err});;
   //console.log("77");
   res.quality(5).write("./images/"+req.body.imageName+"");
   
@@ -66,7 +66,7 @@ upload(req, res, (err) => {
             message: 'File is uploaded successfully'
         })
     });
-    src.on('error', function(err) { return res.status(401).json({
+    src.on('error', function(err) { return res.status(201).json({
         data: err,
         err: true,
         message: 'Something went wrong.'
@@ -116,7 +116,7 @@ module.exports.Userreg = async(req,res)=>{
             var data = req.body.gst_base64data; // Convert base64 to buffer => <Buffer ff d8 ff db 00 43 00 ...
             const buffer = Buffer.from(data, "base64"); 
             gst_base64data_image=req.body.number+'_'+gst_base64data_image;
-            Jimp.read(buffer, (err, res) => {if (err) res.status(401).json({err:err}); 
+            Jimp.read(buffer, (err, res) => {if (err) res.status(201).json({err:err}); 
                 res.quality(5).write("./images/"+gst_base64data_image+""); });  
                 
         }
@@ -127,7 +127,7 @@ module.exports.Userreg = async(req,res)=>{
             const buffer = Buffer.from(data, "base64"); 
             doc_base64data_image=req.body.number+'_'+req.body.doc_filename;
             Jimp.read(buffer, (err, res) => { 
-                if (err) res.status(401).json({err:err}); 
+                if (err) res.status(201).json({err:err}); 
                 res.quality(5).write("./images/"+doc_base64data_image+""); });
             
         }
@@ -139,7 +139,7 @@ module.exports.Userreg = async(req,res)=>{
 
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     if (!req.body.email.match(validRegex)) {
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Invalid Email address'
@@ -147,7 +147,7 @@ module.exports.Userreg = async(req,res)=>{
     }
 
     if (/^\d{10}$/.test(parseInt(req.body.number))==false) {
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Invalid Mobile Number'
@@ -175,7 +175,7 @@ module.exports.Userreg = async(req,res)=>{
     const userRoleList = await UserRole.findOne({_id : Object(req.body.application_type)},{role:true});
     console.log(emailOrMobileNoExist);
     if(emailOrMobileNoExist>0){
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Either mobile number of email id is exist'
@@ -191,7 +191,7 @@ module.exports.Userreg = async(req,res)=>{
       }).count();
 
       if(otpHolderCount==0){
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Mobile number is not exist IN OTP, Kindly Generate and Verify OTP'

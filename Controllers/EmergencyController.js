@@ -9,7 +9,7 @@ const validationUser = async (res,req,type)=>{
     });
     
     if (typeof user ===undefined) {
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Login User Not exist'
@@ -18,7 +18,7 @@ const validationUser = async (res,req,type)=>{
     if(type=="all")
     {
         if (user.number == req.emergency_mobile_no) {
-            return res.status(401).json({
+            return res.status(201).json({
                 data: [],
                 err: true,
                 message: 'please enter diff no'
@@ -59,7 +59,7 @@ module.exports.EmergencyContact = async function (req, res) {
                 const phoneNo = userEmergencyData[0].mobile_no
                 const count = userEmergencyList.length
                 if (count > 2) {
-                    return res.status(401).json({
+                    return res.status(201).json({
                         data: [],
                         err: true,
                         message: 'you are allowed only 3 emergency contact'
@@ -70,7 +70,7 @@ module.exports.EmergencyContact = async function (req, res) {
                 console.log("currentRelationCount",currentRelationCount);
                 if (currentRelationCount >= 2) {
                     // console.log('you are allowed only 3 emergency contact')
-                    return res.status(401).json({
+                    return res.status(201).json({
                         data: [],
                         err: true,
                         message: 'select other relation'
@@ -81,7 +81,7 @@ module.exports.EmergencyContact = async function (req, res) {
                 console.log("currentEmergencyMobileCount",currentEmergencyMobileCount);
                 if (currentEmergencyMobileCount >= 1) {
                     // console.log('you are allowed only 3 emergency contact')
-                    return res.status(401).json({
+                    return res.status(201).json({
                         data: [],
                         err: true,
                         message: 'This Emergency number is already Used'
@@ -137,7 +137,7 @@ module.exports.deleteEmergencyContact = async function (req, res) {
     const user = await validationUser(res,req.body,"single");
 
     if (typeof user ===undefined) {
-        return res.status(401).json({
+        return res.status(201).json({
             data: [],
             err: true,
             message: 'Login User Not exist'
