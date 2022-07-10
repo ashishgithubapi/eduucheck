@@ -30,7 +30,7 @@ const port = process.env.PORT || 3001
 app.use('/images', express.static('images'));
 app.use('/uploads', express.static('uploads'));
 app.use('/offers', express.static('offers'));
-app.use('/screenlocks', express.static('sceenlocks'));
+app.use('/screenlocks', express.static('screenlocks'));
 app.use(cors());
 app.listen(port,()=>{
     console.log(`app running on port ${port}`);
