@@ -70,7 +70,7 @@ upload(req, res, (err) => {
 
 
 module.exports.ViewScreenLock = async(req,res)=>{
-    const user_id = req.params.user_id;
+    const user_id = req.body.user_id;
     const isUserFound = await ScreenLockModel.find({'user_id':Object(user_id)}).count();
     if(isUserFound==0){
         return res.status(200).json({
