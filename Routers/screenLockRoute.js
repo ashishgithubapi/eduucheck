@@ -5,7 +5,7 @@ const{ ViewScreenLock, AddScreenLock,DeleteScreenLock} = require('../Controllers
 var cors = require('cors');
 router.use(cors()); 
 
-router.route('/viewScreenLock')
+router.route('/viewScreenLock/:user_id')
 .get(ViewScreenLock)
 
 router.route('/addScreenLock')
