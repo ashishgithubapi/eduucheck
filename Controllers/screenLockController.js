@@ -34,7 +34,7 @@ upload(req, res, (err) => {
     
     
     if(err) {
-      return res.status(400).send("Something went wrong!");
+      return res.status(201).send("Something went wrong!");
     }
     if(req.file!==undefined){
     console.log("Received file" + req.file.originalname);

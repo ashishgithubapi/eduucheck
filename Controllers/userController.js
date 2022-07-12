@@ -17,7 +17,7 @@ module.exports.SignUp = async(req,res)=>{
    const user = await User.findOne({
     number: req.body.number
     });
-    if(user)return res.status(400).send('user already registered');
+    if(user)return res.status(201).send('user already registered');
     const otp_number_genrate = otpGenerator.generate(6,{
         digits:true, upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false
     });//otp number random genrate
@@ -75,7 +75,7 @@ module.exports.verifyOtp = async(req,res)=>{
       console.log("userRegister",getUserObject);
       if(getUserObject.length>0){
       if(getUserObject[0]['is_activate']=="0"){
-        return res.status(400).send({
+        return res.status(201).send({
           message:"User is not active, kindly contact admin",
           err:true,
           data:[]
@@ -84,7 +84,7 @@ module.exports.verifyOtp = async(req,res)=>{
     }
      
     //   console.log(otpHolder+"yeh otp holder hai");
-      if(otpHolder.length==0) return res.status(400).send({
+      if(otpHolder.length==0) return res.status(201).send({
         message:"Please enter valid OTP",
         err:true,
         data:[]
@@ -129,7 +129,7 @@ module.exports.verifyOtp = async(req,res)=>{
         });
 
       } else{
-          return res.status(400).send({
+          return res.status(201).send({
             message:"otp was wrong",
             err:true,
             data:[]
