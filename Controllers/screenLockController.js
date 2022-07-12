@@ -70,12 +70,22 @@ upload(req, res, (err) => {
 
 
 module.exports.ViewScreenLock = async(req,res)=>{
-const screeLockLists = await ScreenLockModel.find();
-    return res.status(200).json({
-        data: screeLockLists,
-        err: false,
-        message: ''
-    })
+    const user_id = req.body.user_id;
+    const isUserFound = await ScreenLockModel.find({'user_id':Object(user_id)}).count();
+    if(isUserFound==0){
+        return res.status(200).json({
+            data: [],
+            err: true,
+            message: 'Incorrect User!!'
+        })
+    }
+
+    const screeLockLists = await ScreenLockModel.find({user_id:user_id});
+        return res.status(200).json({
+            data: screeLockLists,
+            err: false,
+            message: ''
+        })
 }
 
 
